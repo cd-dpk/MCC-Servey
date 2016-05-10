@@ -1,12 +1,14 @@
-import java.awt.Button;
-import java.awt.FlowLayout;
+package pkg;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -25,7 +27,9 @@ public class ProductEntryFrame extends JFrame {
 	List<Product> productList = new ArrayList<Product>();
 	Product candidateProduct;
 	List<String> candidateProductStringList;
+	List<String> candidateProductPriceStringList;
 	JTextField categoryJText;
+	
 	public ProductEntryFrame() {
 		super("Product Entry of MCC Servey");
 		setCandidateProductList();
@@ -43,7 +47,7 @@ public class ProductEntryFrame extends JFrame {
 				@Override
 				public void itemStateChanged(ItemEvent arg0) {
 					if (jCheckBoxs[number].isSelected()) {
-						ProductDialog productDialog = new ProductDialog(new Product(number,candidateProductStringList.get(number)));
+						ProductDialog productDialog = new ProductDialog(new Product(number,candidateProductStringList.get(number),candidateProductPriceStringList.get(number)));
 						productDialog.show();					
 					} else {
 						for (int j=0; j<productList.size(); j++) {
@@ -58,7 +62,7 @@ public class ProductEntryFrame extends JFrame {
 			});
 		}
 		
-		categoryJText = new JTextField("200");
+		categoryJText = new JTextField("2000");
 		add(categoryJText);
 		JButton okayButton = new JButton("OKAY");
 		add(okayButton);
@@ -66,13 +70,26 @@ public class ProductEntryFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (productList.size() != 0) {
-					System.out.println("Name\t| Price Range BDT\t| Local/Imported\t| Warranty\t| Monthly Sell\t| Local Brand");
-					for (Product product : productList) {
-						System.out.println(product);
+					File file = new File("Hello.txt");
+					try {
+						FileWriter fileWriter = new FileWriter(file);
+						fileWriter.write("Name \t| Price Range BDT \t| Local/Imported\t| Warranty \t| Monthly Sell \t| Local Brand\n");
+						//System.out.println("Name\t| Price Range BDT\t| Local/Imported\t| Warranty\t| Monthly Sell\t| Local Brand");
+						int i=0;
+						for (Product product : productList) {
+							//System.out.println(product);
+							fileWriter.write((i+1)+". "+ product+"\n");
+							i++;
+						}
+						fileWriter.close();
+						refreshFrame();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-					refreshFrame();
+					
 				} else {
-					System.out.println("Please Add Product");
+					//System.out.println("Please Add Product");
 				}
 			}
 		});
@@ -84,7 +101,7 @@ public class ProductEntryFrame extends JFrame {
 				if (productList.size()!=0) {
 					refreshFrame();					
 				} else {
-					System.out.println("Nothing to refresh");
+				//	System.out.println("Nothing to refresh");
 				}
 			}
 		});
@@ -100,16 +117,16 @@ public class ProductEntryFrame extends JFrame {
 		add(exitButton);
 	}
 	class ProductDialog extends JDialog{
-		JLabel lowestPriceJLabel,warrantyJLabel,monthylySellingJLabel,localProductBrandJLabel,productLocalityJLabel;
-		JTextField lowestPriceJText,warrantyJText,monthylySellingJText,localProductBrandJText;
+		JLabel lowestPriceJLabel,highestPriceJLabel,warrantyJLabel,monthylySellingJLabel,localProductBrandJLabel,productLocalityJLabel;
+		JTextField lowestPriceJText,highestPriceJText,warrantyJText,monthylySellingJText,localProductBrandJText;
 		JComboBox productLocalityJComboBox;
-		String [] productLocalityArray={"Local","Imported"};
+		String [] productLocalityArray={"Imported","Local"};
 		JButton okay, cancel;
 		public ProductDialog(Product product) {
 			super(ProductEntryFrame.this,"Product Dialog");
 			setDefaultCloseOperation(0);
 			final Product candidateProduct = product.toClone();
-			setLayout(new GridLayout(7,2));
+			setLayout(new GridLayout(8,2));
 			JLabel productNameLabel  = new JLabel("Product Name");
 			add(productNameLabel);
 			JLabel productName = new JLabel(candidateProduct.getProductName());
@@ -117,7 +134,14 @@ public class ProductEntryFrame extends JFrame {
 			lowestPriceJLabel = new JLabel("Lowest Price");
 			add(lowestPriceJLabel);
 			lowestPriceJText = new JTextField();
+			lowestPriceJText.setText(candidateProduct.lowestPrice);
 			add(lowestPriceJText);
+			highestPriceJLabel = new JLabel("Highest Price");
+			add(highestPriceJLabel);
+			highestPriceJText = new JTextField();
+			highestPriceJText.setText(categoryJText.getText());
+			add(highestPriceJText);
+			
 			productLocalityJLabel = new JLabel("Local/Imported");
 			add(productLocalityJLabel);
 			productLocalityJComboBox = new JComboBox(productLocalityArray);
@@ -138,14 +162,14 @@ public class ProductEntryFrame extends JFrame {
 			add(okay);
 			cancel = new JButton("CANCEL");
 			add(cancel);
-			setSize(500, 200);
+			setSize(550, 200);
 			okay.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					// TODO Auto-generated method stub
 					
 					candidateProduct.setLowestPrice(lowestPriceJText.getText());
-					candidateProduct.setHighestPrice(categoryJText.getText());
+					candidateProduct.setHighestPrice(highestPriceJText.getText());
 					candidateProduct.setProductLocalityString(productLocalityArray[productLocalityJComboBox.getSelectedIndex()]);
 					if (warrantyJText.getText().equals("")) {
 						candidateProduct.warrantyString="N/A";
@@ -182,7 +206,7 @@ public class ProductEntryFrame extends JFrame {
 	public  void newFrame(){
 		ProductEntryFrame frame = new ProductEntryFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(500,500);
+		frame.setSize(700,700);
 		frame.setVisible(true);
 	}
 	private void refreshFrame(){
@@ -191,12 +215,80 @@ public class ProductEntryFrame extends JFrame {
 	}
 	private void setCandidateProductList(){
 		candidateProductStringList = new ArrayList<String>();
+		candidateProductPriceStringList = new ArrayList<String>();
+		candidateProductStringList.add("BIJOY");
+		candidateProductPriceStringList.add("150");
 		candidateProductStringList.add("Mouse");
+		candidateProductPriceStringList.add("400");
 		candidateProductStringList.add("Router");
+		candidateProductPriceStringList.add("1100");
 		candidateProductStringList.add("AntiVirus");
+		candidateProductPriceStringList.add("1000");
 		candidateProductStringList.add("Cable");
+		candidateProductPriceStringList.add("700");
 		candidateProductStringList.add("HeadPhone");
+		candidateProductPriceStringList.add("700");
 		candidateProductStringList.add("Mini Sound");
+		candidateProductPriceStringList.add("1100");
+		candidateProductStringList.add("Bluetooth Sound");
+		candidateProductPriceStringList.add("1100");
+		candidateProductStringList.add("Keyboard");
+		candidateProductPriceStringList.add("300");
+		candidateProductStringList.add("Multiplug");
+		candidateProductPriceStringList.add("700");
+		candidateProductStringList.add("Card Reader");
+		candidateProductPriceStringList.add("100");
+		candidateProductStringList.add("A4 Mouse");
+		candidateProductPriceStringList.add("400");
+		candidateProductStringList.add("A4 Keyboard");
+		candidateProductPriceStringList.add("300");
+		candidateProductStringList.add("Moniotor");
+		candidateProductPriceStringList.add("7K");
+		candidateProductStringList.add("Pendrive");
+		candidateProductPriceStringList.add("350");
+		candidateProductStringList.add("Mouse Pad");
+		candidateProductPriceStringList.add("50");
+		candidateProductStringList.add("Webcam");
+		candidateProductPriceStringList.add("1500");
+		candidateProductStringList.add("Speaker");
+		candidateProductPriceStringList.add("500");
+		candidateProductStringList.add("Casing");
+		candidateProductPriceStringList.add("1500");
+		candidateProductStringList.add("Laptop");
+		candidateProductPriceStringList.add("22k");
+		candidateProductStringList.add("Desktop");
+		candidateProductPriceStringList.add("20k");
+		candidateProductStringList.add("Server");
+		candidateProductPriceStringList.add("75k");
+		candidateProductStringList.add("All in one");
+		candidateProductPriceStringList.add("35k");
+		candidateProductStringList.add("WorkStation");
+		candidateProductPriceStringList.add("1.5k");
+		candidateProductStringList.add("Online UPS");
+		candidateProductPriceStringList.add("35k");
+		candidateProductStringList.add("Switch");
+		candidateProductPriceStringList.add("800");
+		candidateProductStringList.add("RAM");
+		candidateProductPriceStringList.add("1000");
+		candidateProductStringList.add("Cartidge");
+		candidateProductPriceStringList.add("1400");
+		candidateProductStringList.add("Color");
+		candidateProductPriceStringList.add("50");
+		candidateProductStringList.add("Drum");
+		candidateProductPriceStringList.add("600");
+		candidateProductStringList.add("Cord");
+		candidateProductPriceStringList.add("100");
+		candidateProductStringList.add("Laser Ink");
+		candidateProductPriceStringList.add("1500");
+		candidateProductStringList.add("Motherboard(Printer)");
+		candidateProductPriceStringList.add("2500");
+		candidateProductStringList.add("Epson Printer");
+		candidateProductPriceStringList.add("3000");
+		candidateProductStringList.add("Cannon Printer");
+		candidateProductPriceStringList.add("3000");
+		candidateProductStringList.add("HP Printer");
+		candidateProductPriceStringList.add("2500");
+		
 	}
 	public static void main(String[] args) {
 		new ProductEntryFrame().newFrame();
