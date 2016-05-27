@@ -1,0 +1,11 @@
+insert into User (phone,name,email,address,photoID) values ('01911645240','Abdul','abdul@gmail.com','Dhanmondi, Dhaka' ,'ABC');
+insert into User (phone,name,email,address,photoID) values ('01711645244','Bablu','bablu@gmail.com','Hazarubag, Dhaka' ,'DEF');
+insert into User (phone,name,email,address,photoID) values ('Chandan','chandan@gmail.com','Azimpur, Dhaka' ,'GHI');
+insert into User (phone,name,email,address,photoID) values ('01111645987','Dulal','dulal@gmail.com','Polashi, Dhaka' ,'JKL');
+insert into User (phone,name,email,address,photoID) values ('01689452635','Emon','emon@gmail.com','Komlapur, Dhaka' ,'MNO');
+insert into User (phone,name,email,address,photoID) values ('01861125896','Fazlul','fazlul@gmail.com','Khilgaon, Dhaka' ,'PQR');
+insert into User (phone,name,email,address,photoID) values ('01524693248','Gani','gani@gmail.com','Malibag, Dhaka' ,'STU');
+insert into User (phone,name,email,address,photoID) values ('01618596324''Hakim','hakim@gmail.com','Mouchak, Dhaka' ,'VWX');
+insert into User (phone,name,email,address,photoID) values ('01521465829','Imran','imran@gmail.com','Segunbagicha, Dhaka' ,'YZA');
+insert into User (phone,name,email,address,photoID) values ('01925896471','Jamil','jamil@gmail.com','Kakrail, Dhaka' ,'BCD');
+		

@@ -1,0 +1,32 @@
+#div_header{
+		height:50px;
+		background-color:blue;
+}
+#div_menu{
+		height:30px;
+		background-color:green;
+}
+#div_content{
+		background-color:white;
+		height: 100px;
+}
+table{
+		border:1px solid black;
+		border-collapse:collapse;
+		width: 100%;
+		text-align: left;
+}
+th,td{
+		padding-left:20px;
+		height: 30px;
+}
+a{
+				color: white;
+				border: 4px 4px 0 0;
+				width:30px;
+				text-align:center;
+				height:30px;
+				text-decoration: underline;
+				padding:0px 50px 0px 50px;
+				text-decoration: none;
+}
